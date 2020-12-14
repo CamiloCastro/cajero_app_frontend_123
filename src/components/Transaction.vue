@@ -1,8 +1,18 @@
 <template>
   <div id="Transaction">
-    <br /><br />    
-    Cantidad: <input type="text" placeholder="Cantidad" v-model="cantidad" /> <br /><br />
-    <button v-on:click="makeTransaction">Hacer transacción</button>
+    
+      <b-row>
+        <b-col cols="4">Cantidad:</b-col>
+        <b-col cols="8"><b-form-input style="width: 50%" type="text" placeholder="Cantidad" v-model="cantidad" /></b-col>
+      </b-row>
+      <b-row>
+          <b-button variant="dark" v-on:click="makeTransaction">Hacer transacción</b-button>
+      </b-row>
+    
+
+
+    
+    
   </div>
 </template>
 
