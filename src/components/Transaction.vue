@@ -73,7 +73,14 @@ export default {
     let self = this;
     axios.get("http://localhost:8000/user/transactions/" + current_username)
       .then((result) => {
-        self.transactions = result.data;
+        var ts = result.data;
+
+        for (let i = 0; i < ts.length; i++)
+        {
+          //ts[i].date = ts[i].date.slice(0, 16).replace("T", " ");
+        }
+
+        self.transactions = ts;
       })
       .catch((error) => {
         alert("ERROR Servidor");
