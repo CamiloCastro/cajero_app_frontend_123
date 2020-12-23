@@ -36,8 +36,18 @@ export default {
       axios
         .post("http://127.0.0.1:8000/user/auth/", self.user_in, { headers: {} })
         .then((result) => {
-          alert("Autenticación Exitosa");
-          self.$emit("log-in", self.user_in.username);
+
+          if(result.data.length == 0)
+          {
+            alert("El usuario no tiene un rol asociado");
+          }
+          else
+          {
+            let selected_role = result.data[0].role_name;
+            alert("Autenticación Exitosa");
+            self.$emit("log-in", self.user_in.username, selected_role);
+          }
+
         })
         .catch((error) => {
           if (error.response.status == "404")

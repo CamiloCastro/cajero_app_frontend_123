@@ -4,8 +4,14 @@
       <h1>Banco UN</h1>
       <nav>
         <button v-on:click="init" v-if="is_auth">Inicio</button>
-        <button v-on:click="getBalance" v-if="is_auth">Saldo</button>
-        <button v-on:click="doTransaction" v-if="is_auth">Transacción</button>
+
+        <button v-on:click="getBalance" v-if="is_usuario">Saldo</button>
+        <button v-on:click="doTransaction" v-if="is_usuario">Transacción</button>
+
+        <button v-on:click="getUserCreate" v-if="is_banco">Registro cuenta</button>
+        <button v-on:click="getUserModifyBalance" v-if="is_banco">Modificación Balance</button>
+
+        <button v-on:click="getUserRole" v-if="is_auth">Cambiar rol</button>
         <button v-on:click="logOut" v-if="is_auth">Cerrar Sesión</button>
       </nav>
     </div>
@@ -25,12 +31,17 @@ export default {
   data: function () {
     return {
       is_auth: localStorage.getItem("isAuth") || false,
+      is_banco: localStorage.getItem("current_user_role") === "BANCO",
+      is_usuario: localStorage.getItem("current_user_role") === "USUARIO"      
     };
   },
   methods: {
     updateAuth: function () {
       var self = this;
       self.is_auth = localStorage.getItem("isAuth") || false;
+      self.is_banco = localStorage.getItem("current_user_role") === "BANCO";
+      self.is_usuario = localStorage.getItem("current_user_role") === "USUARIO";
+
       if (self.is_auth == false)
        self.$router.push({ name: "user_auth" });
       else {
@@ -38,12 +49,14 @@ export default {
         self.$router.push({ name: "user", params: { usuario: username } });
       }
     },
-    logIn: function (username) {
+    logIn: function (username, user_role) {
+      localStorage.setItem('current_user_role', user_role)
       localStorage.setItem('current_username', username)
       localStorage.setItem('isAuth', true)
       this.updateAuth()
     },
     logOut: function () {
+      localStorage.removeItem('current_user_role')
       localStorage.removeItem('isAuth')
       localStorage.removeItem('current_username')
       this.updateAuth()
@@ -53,6 +66,18 @@ export default {
         let username = localStorage.getItem("current_username");
         this.$router.push({ name: "user", params: { usuario: username } });
       }
+    },
+    getUserRole: function() {
+      let username = localStorage.getItem("current_username")
+      this.$router.push({name: "user_role", params:{ username: username }})
+    },
+    getUserCreate: function () {
+      let username = localStorage.getItem("current_username")
+      this.$router.push({name: "user_create", params:{ username: username }})
+    },
+    getUserModifyBalance: function () {
+      let username = localStorage.getItem("current_username")
+      this.$router.push({name: "user_modify_balance", params:{ username: username }})
     },
     getBalance: function () {
       if (this.$route.name != "user_balance") {
@@ -97,7 +122,7 @@ body {
 }
 .header nav {
   height: 100%;
-  width: 45%;
+  width: 55%;
   display: flex;
   justify-content: space-around;
   align-items: center;
